@@ -131,8 +131,14 @@ function makeImmutable(obj) {
  *    makeWord({ a: [0, 1], b: [2, 3], c: [4, 5] }) => 'aabbcc'
  *    makeWord({ H:[0], e: [1], l: [2, 3, 8], o: [4, 6], W:[5], r:[7], d:[9]}) => 'HelloWorld'
  */
-function makeWord(/* lettersObject */) {
-  throw new Error('Not implemented');
+function makeWord(lettersObject) {
+  const arrayWord = [];
+  Object.entries(lettersObject).forEach(([letter, positions]) =>
+    positions.forEach((pos) => {
+      arrayWord[pos] = letter;
+    })
+  );
+  return arrayWord.map((value) => value ?? ' ').join('');
 }
 
 /**
@@ -149,8 +155,35 @@ function makeWord(/* lettersObject */) {
  *    sellTickets([25, 25, 50]) => true
  *    sellTickets([25, 100]) => false (The seller does not have enough money to give change.)
  */
-function sellTickets(/* queue */) {
-  throw new Error('Not implemented');
+function sellTickets(queue) {
+  const bills = { twentyFive: 0, fifty: 0 };
+  return queue.every((bill) => {
+    switch (bill) {
+      case 25:
+        bills.twentyFive += 1;
+        return true;
+      case 50:
+        if (bills.twentyFive > 0) {
+          bills.twentyFive -= 1;
+          bills.fifty += 1;
+          return true;
+        }
+        return false;
+      case 100:
+        if (bills.twentyFive > 0 && bills.fifty > 0) {
+          bills.twentyFive -= 1;
+          bills.fifty -= 1;
+          return true;
+        }
+        if (bills.twentyFive >= 3) {
+          bills.twentyFive -= 3;
+          return true;
+        }
+        return false;
+      default:
+        throw new Error('Unknown bill!');
+    }
+  });
 }
 
 /**
